@@ -1,0 +1,26 @@
+<div class="container-fluid">
+	<div class="jumbotron">
+		<h1 class="h1">Welcome Admin! Please Login</h1>
+	</div>
+
+	<%- messages() %>
+
+	<form action="/productSave" method="POST" enctype="multipart/form-data">
+		<div class="form-group row">
+			<label for="example-text-input" class="col-2 col-form-label">Product Title</label>
+			<div class="col-10">
+				<input class="form-control" type="text" value="" id="example-text-input" name="title">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="example-search-input" class="col-2 col-form-label">Description</label>
+			<div class="col-10">
+				<textarea  class="form-control" value="" id="example-search-input" name="description"></textarea>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-10">
+				<input type="submit" name="submit" value="Submit" class="btn btn-submit">
+			</div>
+		</div>
+	</form>

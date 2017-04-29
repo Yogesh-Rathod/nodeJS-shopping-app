@@ -1,0 +1,41 @@
+<div class="container-fluid">
+	<div class="jumbotron">
+		<h1 class="">Here is your product cart!</h1>
+	</div>
+
+	<div>
+		<%- messages() %>
+
+		<table class="table-responsive table">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Title</th>
+					<th>Quantity</th>
+					<th>Price</th>
+				</tr>
+			</thead>
+			<tbody>
+			<% if(cart.items) { %>
+				<% cart.items.forEach(function(cart, index) { %>
+					<tr>
+						<td><%= index + 1 %></td>
+						<td><%= cart.title %></td>
+						<td><%= cart.qty %></td>
+						<td><%= cart.price * cart.qty %></td>
+					</tr>
+				<% }); %>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td>Total:</td>
+						<td></td>
+						<td><%= cart.total %></td>
+					</tr>
+				</tfoot>
+			<% } %>
+		</table>
+
+	</div>
+</div>

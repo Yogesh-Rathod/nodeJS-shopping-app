@@ -1,0 +1,30 @@
+<div class="container-fluid">
+	<div class="jumbotron"><h1 class="">Here is the List of Products!</h1></div>
+
+	<div class="products-container clearfix">
+		<% if(products){ %>
+			<% if(products.length == 0 ) { %>
+				<h2>There are <strong>No</strong> Products to show!</h2>
+			<% } else { %>
+				<% products.forEach(function(products, index) { %>
+					<div class="col-xs-4">
+						<div class="img-container">
+							<img src="/images/products/<%= products.image %>" alt="Product" class="img-responsive">
+						</div>
+						<div class="description">
+							<h2><%= products.title %></h2>
+							<p><%= products.description %> <a href="/details/<%= products.id %>" class="link">Read More</a></p>
+							<p class="price"><span>Price:</span>&#8377; <%= products.price %> </p>
+							<form action="/cart/<%= products.id %>" method="POST">
+								<div>
+									<input type="submit" name="submit" value="Add To Cart"  class="btn btn-primary">
+								</div>
+							</form>
+						</div>
+					</div>
+				<% }); %>
+			<% } } %>
+
+	</div>
+
+</div>

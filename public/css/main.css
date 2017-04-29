@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  background-color: #fff; }
+
+.jumbotron {
+  background: #532F8C;
+  color: white;
+  padding: 10px 0; }
+
+.jumbotron .btn-primary {
+  background: #845ac7;
+  border-color: #845ac7; }
+
+.jumbotron .btn-primary:hover {
+  background: #7646c1; }
+
+.jumbotron p {
+  color: #d9ccee;
+  max-width: 75%;
+  margin: 1em auto 2em; }
+
+.navbar + .jumbotron {
+  margin-top: -20px; }
+
+.jumbotron .lang-logo {
+  display: block;
+  background: #B01302;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  border: 2px solid white; }
+
+.jumbotron .lang-logo img {
+  max-width: 100%; }
+
+.jumbotron h2 {
+  margin: 0; }
+
+.thead .th,
+.tbody .td {
+  padding: 10px; }
+
+.mandatory {
+  color: #f00; }
+
+.success-msg {
+  background: rgba(0, 255, 0, 0.3);
+  position: fixed;
+  padding: 31px;
+  border-radius: 10%;
+  color: #000;
+  top: 52px; }
+
+footer {
+  margin-top: 25px;
+  text-align: center; }
+
+main li {
+  list-style-type: none;
+  margin-bottom: 10px; }
+
+.errors-list li,
+.error li,
+.success li {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin: 0; }
+
+ul.error {
+  padding: 10px;
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  border-radius: 5px; }
+
+ul.success {
+  padding: 10px;
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  border-radius: 5px; }
+
+.table .col-xs-2 {
+  width: 20%; }
+
+.jumbotron .h1, .jumbotron h1 {
+  font-size: 42px; }
+
+.col-xs-4 {
+  padding-top: 20px;
+  padding-bottom: 40px;
+  cursor: pointer;
+  transition: 0.45s; }
+
+.col-xs-4:hover {
+  transform: scale(1.01);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.55); }

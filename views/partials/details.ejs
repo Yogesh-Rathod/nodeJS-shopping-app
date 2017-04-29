@@ -1,0 +1,32 @@
+<div class="container-fluid">
+	<div class="jumbotron">
+		<h1 class="">Product Details!</h1>
+	</div>
+
+	<div>
+		<% if(product){ %>
+			<div class="col-xs-6">
+				<div class="img-container">
+					<img src="/images/products/<%= product.image %>" alt="Product" class="img-responsive">
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="description">
+					<h2><%= product.title %></h2>
+					<p><%= product.description %></p>
+					<p><%= product.addinformation %></p>
+					<p class="price"><span>Price: </span>&#8377; <%= product.price %></p>
+					<form action="/cart/<%= product.id %>" method="POST">
+						<div>
+							<input type="submit" name="submit" value="Add To Cart"  class="btn btn-primary">
+						</div>
+					</form>
+				</div>
+			</div>
+		<% } else { %>
+			<div class="col-xs-12">
+				<h2>This Product is No Longer Available. </h2>
+			</div>
+		<% } %>
+	</div>
+</div>
