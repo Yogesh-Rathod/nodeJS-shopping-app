@@ -1,0 +1,53 @@
+<div class="container-fluid">
+	<div class="jumbotron">
+		<h1 class="h1">Welcome Admin!</h1>
+	</div>
+	<div class="container">
+		<h2>Edit Product Below</h2>
+
+		<%- messages() %>
+
+		<form action="/saveEditedProduct/<%= product.id %>" method="POST" enctype="multipart/form-data">
+			<div class="form-group row">
+				<label for="example-text-input" class="col-2 col-form-label">Product Title</label>
+				<div class="col-10">
+					<input class="form-control" type="text" value="<%= product.title %>" id="example-text-input" name="title">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="example-search-input" class="col-2 col-form-label">Description</label>
+				<div class="col-10">
+					<textarea  class="form-control" id="example-search-input" name="description"><%= product.description %></textarea>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="example-email-input" class="col-2 col-form-label">Product Price</label>
+				<div class="col-10">
+					<input class="form-control" type="text" name="price" id="" value="<%= product.price %>">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="example-url-input" class="col-2 col-form-label">Additional Information</label>
+				<div class="col-10">
+					<textarea  class="form-control" id="example-search-input" name="information"><%= product.addinformation %></textarea>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="example-url-input" class="col-2 col-form-label">Product Image</label>
+				<div class="clearfix"></div>
+				<div class="col-xs-4">
+					<img src="/images/products/<%= product.image %>" alt="Product Image" class="img-responsive" name="existingImage">
+					<input type="hidden" value="<%= product.image %>" name="existingImage">
+				</div>
+				<div class="col-10">
+					<input class="form-control" type="file" name="productImage" id="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-10">
+					<input type="submit" name="submit" value="Submit" class="btn btn-success">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

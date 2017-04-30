@@ -39,6 +39,9 @@ module.exports = (app) => {
 	// Admin Area
 	app.get('/admin', adminPage);
 
+	// Admin Login
+	app.get('/admin-login', adminLoginPage);
+
 	// Admin Edit
 	app.get('/edit/:id', productEdit);
 
@@ -51,11 +54,17 @@ module.exports = (app) => {
 	// Products Cart Page
 	app.get('/cart', productCart);
 
+	// Admin Login
+	app.post('/adminLogin', adminLoginCheck);
+
 	// Save Product to DataBase
 	app.post('/productSave', upload.single('productImage'), saveProduct);
 
 	// Products Cart Page
 	app.post('/cart/:id', addProductToCart);
+
+	// Save Edited Product
+	app.post('/saveEditedProduct/:id', upload.single('productImage'), saveEditedProduct);
 };
 
 // Default / Home page
@@ -77,41 +86,44 @@ let productsPage = (req, res) => {
 			products: products });
 }
 
-// Product Details
-let detailsPage = (req, res) => {
-
-	res.render('pages/details',
-		{
-			Pagetitle: 'Product Details'
-		}
-	);
-}
-
 // Admin Area
 let adminPage = (req, res) => {
-	// Get List Of Products
-	Products.find({}, (err, products) => {
-	  if (err) { console.log(err); }
-		res.render('pages/admin',
-			{
-				Pagetitle: 'Admin',
-				products: products
-			}
-		);
-	});
+
+	if (req.session.validUser) {
+		// Get List Of Products
+		Products.find({}, (err, products) => {
+		  if (err) { console.log(err); }
+			res.render('pages/admin',
+				{
+					Pagetitle: 'Admin',
+					products: products
+				}
+			);
+		});
+	} else {
+		res.redirect('/admin-login');
+	}
+}
+
+// Admin Login
+let adminLoginPage = (req, res) => {
+	res.render('pages/admin-login', { Pagetitle: 'Admin Login' });
 }
 
 // Admin Edit Pagetitle
 let productEdit = (req, res) => {
-	res.render('pages/edit', { Pagetitle: 'Product Edit' });
-}
-
-// Get All productSave
-let getAllProducts = (req, res) => {
-	Products.find({}, (err, products) => {
-	  if (err) { console.log(err); }
-	  return products;
-	});
+	if (req.session.validUser) {
+		let productId = req.params.id;
+		Products.findOne({ _id: productId} , (err, product) => {
+			res.render('pages/edit',
+				{
+					Pagetitle: 'Product Edit',
+					product: product
+				});
+		});
+	} else {
+		res.redirect('/admin-login');
+	}
 }
 
 // Product Detail Page
@@ -208,5 +220,53 @@ let addProductToCart = (req, res) => {
 		}
 		req.flash('success', 'Product Successfully Added To Your Cart.');
 		res.redirect('/cart');
+	});
+}
+
+// Admin Login Check
+let adminLoginCheck = (req, res) => {
+
+	let username = req.body.username,
+			password = req.body.password;
+
+	if(username == 'admin' && password == 'admin') {
+		req.session.validUser = true;
+		res.redirect('/admin');
+	} else {
+		req.flash('error', 'Wrong Username or Password');
+		req.session.validUser = false;
+		res.redirect('/admin-login');
+	}
+}
+
+// Save Edited Product
+let saveEditedProduct = (req, res) => {
+
+	let productImage = req.body.existingImage;
+
+	if (req.file) {
+		productImage = req.file.filename;
+	}
+
+	let productId = req.params.id,
+			productTitle = req.body.title,
+			productDescription = req.body.description,
+			productPrice = req.body.price,
+			productAddinformation = req.body.information;
+
+	Products.findByIdAndUpdate(productId,
+		{
+			$set: {
+				title: productTitle,
+				description: productDescription,
+				addinformation: productAddinformation,
+				image: productImage,
+				price: productPrice,
+				created_at: new Date()
+			}
+		}, (err, done) => {
+		if (err) { console.log(err); }
+	  req.flash('success', 'Product Information Successfully Updated.');
+	  res.redirect('/admin');
 	});
 }
