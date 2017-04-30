@@ -7,6 +7,14 @@
 
 		<%- messages() %>
 
+		<% if (validationErrors) { %>
+			<ul class="alert alert-danger errors-list">
+				<% validationErrors.forEach(function(errorsMsgs) { %>
+					<li><%- errorsMsgs.msg %></li>
+				<% }); %>
+			</ul>
+		<% } %>
+
 		<form action="/productSave" method="POST" enctype="multipart/form-data">
 			<div class="form-group row">
 				<label for="example-text-input" class="col-2 col-form-label">Product Title</label>

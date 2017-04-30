@@ -3,7 +3,9 @@ const express = require('express'),
 	  	bodyParser = require('body-parser'),
 	  	multer = require('multer'),
 	  	flash = require('connect-flash'),
-	  	expresssession = require('express-session');
+	  	expresssession = require('express-session'),
+  		expressValidator = require('express-validator'),
+  		path = require('path');
 
 // grab the Products model
 var Products = require('../models/products');
@@ -12,8 +14,25 @@ module.exports = (app) => {
 
 	app.use( bodyParser.json() );
 	app.use( bodyParser.urlencoded({ extended: true }) );
-	var upload = multer({ dest: './public/images/products' });
+	// Configure Express Validator
+	app.use(expressValidator({
+	  errorFormatter: function(param, msg, value) {
+	      var namespace = param.split('.')
+	      , root    = namespace.shift()
+	      , formParam = root;
 
+	    while(namespace.length) {
+	      formParam += '[' + namespace.shift() + ']';
+	    }
+	    return {
+	      param : formParam,
+	      msg   : msg,
+	      value : value
+	    };
+	  }
+	}));
+	// Configure Multer File Upload
+	var upload = multer({ dest: './public/images/products' });
 
 	// Express Session
 	app.use(expresssession({
@@ -32,9 +51,6 @@ module.exports = (app) => {
 
 	// Default / Home page
 	app.get('/', homePage );
-
-	// Products Page
-	app.get('/', productsPage );
 
 	// Admin Area
 	app.get('/admin', adminPage);
@@ -80,29 +96,24 @@ let homePage = (req, res) => {
 	})
 };
 
-// Products Page
-let productsPage = (req, res) => {
-	res.render('pages/products', { Pagetitle: 'Products',
-			products: products });
-}
-
 // Admin Area
 let adminPage = (req, res) => {
 
-	if (req.session.validUser) {
+	// if (req.session.validUser) {
 		// Get List Of Products
 		Products.find({}, (err, products) => {
 		  if (err) { console.log(err); }
 			res.render('pages/admin',
 				{
 					Pagetitle: 'Admin',
-					products: products
+					products: products,
+					validationErrors: null
 				}
 			);
 		});
-	} else {
-		res.redirect('/admin-login');
-	}
+	// } else {
+		// res.redirect('/admin-login');
+	// }
 }
 
 // Admin Login
@@ -178,26 +189,57 @@ let saveProduct = (req, res) => {
 
 	if ( req.file ) {
 		var productImage = req.file.filename;
+		// validating Image MIME Type
+		var filetypes = /jpeg|jpg|png/;
+		var mimetype = filetypes.test(req.file.mimetype);
+		var extname = filetypes.test(path.extname(req.file.originalname).toLowerCase());
+		if (mimetype && extname) {
+    } else {
+    	req.flash('error', 'Product Image Should be Image Only.');
+    	var imageValidationError = true;
+    }
 	} else {
 		var productImage = 'productImageDefault.png';
 	}
 
-	// create a new Product
-	let newProduct = Products({
-	  title: title,
-	  description: description,
-	  addinformation: addinformation,
-	  image: productImage,
-	  price: price,
-	  created_at: new Date()
-	});
+	// Checking validation Errors
+	req.assert('title', 'Product Title is Required').notEmpty();
+	req.assert('description', 'Product Description is Required').notEmpty();
+	req.assert('price', 'Product Price is Required').notEmpty()
+	req.assert('price', 'Product Price Should Be Numeric').isNumeric();
 
-	// save the Product
-	newProduct.save( (err) => {
-	  if (err) { console.log(err); }
-	  req.flash('success', 'New Product Successfully Added.');
-	  res.redirect('/admin');
-	});
+	var validationErrors = req.validationErrors();
+
+	if (validationErrors || imageValidationError) {
+		Products.find({}, (err, products) => {
+			if (err) { console.log(err); }
+			req.flash('error', 'Validation Errors Found.');
+		  res.render('pages/admin',
+		  	{
+		  		Pagetitle: 'Admin',
+		  		validationErrors: validationErrors,
+		  		products: products
+		  	}
+		  );
+		});
+	} else {
+		// create a new Product
+		let newProduct = Products({
+		  title: title,
+		  description: description,
+		  addinformation: addinformation,
+		  image: productImage,
+		  price: price,
+		  created_at: new Date()
+		});
+
+		// save the Product
+		newProduct.save( (err) => {
+		  if (err) { console.log(err); }
+		  req.flash('success', 'New Product Successfully Added.');
+		  res.redirect('/admin');
+		});
+	}
 }
 
 // Add Product To Cart
