@@ -99,7 +99,7 @@ let homePage = (req, res) => {
 // Admin Area
 let adminPage = (req, res) => {
 
-	// if (req.session.validUser) {
+	if (req.session.validUser) {
 		// Get List Of Products
 		Products.find({}, (err, products) => {
 		  if (err) { console.log(err); }
@@ -111,9 +111,9 @@ let adminPage = (req, res) => {
 				}
 			);
 		});
-	// } else {
-		// res.redirect('/admin-login');
-	// }
+	} else {
+		res.redirect('/admin-login');
+	}
 }
 
 // Admin Login
