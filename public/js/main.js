@@ -1,4 +1,3 @@
-// Modular JS
 // JS in Modular Pattern
 var NODEAPP = (function () {
 
@@ -11,22 +10,21 @@ var NODEAPP = (function () {
 
   	// All Window Load Should be Here
 		$(window).on('load', function() {
-      // new WOW().init();
 		});
 
-    // $('.products-container').masonry({
-    //   // options
-    //   itemSelector: '.col-xs-4',
-    //   columnWidth: '.col-xs-4',
-    //   // percentPosition: true,
-    //   fitWidth: true
-    // });
+    // Detect If Images Are Broken And Fix Them Up
+    var otherImages = ['products/asus.jpg', 'products/hp-stylish.jpg', 'products/macbook.jpg', 'products/hp.png', 'products/spectra.jpg'];
+    var count = 0;
+    $("img").error(function(){
+      var imgSrc = $(this).attr('src');
+      imgSrc = imgSrc.substring(0, imgSrc.indexOf('products'));
+      $(this).attr('src', imgSrc + otherImages[count] );
+      count++;
+    });
 
 		// All Window Scroll Should be Here
-		// $(window).on('scroll', function(event) {
-		// 	console.log("scroll");
-
-		// });
+		$(window).on('scroll', function(event) {
+		});
   };
 
   obj.cacheDom = function () {
