@@ -36,6 +36,7 @@ module.exports = (app) => {
 	    };
 	  }
 	}));
+
 	// Configure Multer File Upload
 	var upload = multer({ dest: './public/images/products' });
 
@@ -337,6 +338,7 @@ let stripePaymentGateway = (req, res) => {
          customer: customer.id
     }))
   .then(charge => {
+  		req.session.cart = {};
   		res.render("pages/charge", { Pagetitle: 'Sucessful payment' } );
   	});
 }
