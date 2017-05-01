@@ -7,6 +7,11 @@ const express = require('express'),
   		expressValidator = require('express-validator'),
   		path = require('path');
 
+// Stripe
+const keyPublishable = 'pk_test_XWSXOxT1ZmAehAOMGQWyZ6ue';
+const keySecret = 'sk_test_D4SmGbT8qVUKgdT12nRHJ7gV';
+const stripe = require("stripe")(keySecret);
+
 // grab the Products model
 var Products = require('../models/products');
 
@@ -34,14 +39,14 @@ module.exports = (app) => {
 	// Configure Multer File Upload
 	var upload = multer({ dest: './public/images/products' });
 
-	// Express Session
+	// Configure Express Session
 	app.use(expresssession({
 		secret: 'secret',
 		saveUninitialized: true,
 		resave: true
 	}));
 
-	// Flash Messages
+	// Configure Flash Messages
 	app.use(flash());
 	app.use(require('connect-flash')());
 	app.use(function (req, res, next) {
@@ -81,6 +86,9 @@ module.exports = (app) => {
 
 	// Save Edited Product
 	app.post('/saveEditedProduct/:id', upload.single('productImage'), saveEditedProduct);
+
+	// Stripe Payment Gateway
+	app.post("/charge", stripePaymentGateway);
 };
 
 // Default / Home page
@@ -174,7 +182,8 @@ let productCart = (req, res) => {
 	displayCart.total = total;
 	res.render('pages/cart', {
 		Pagetitle: 'Product Cart' ,
-		cart: displayCart
+		cart: displayCart,
+		keyPublishable: keyPublishable
 	});
 }
 
@@ -307,8 +316,27 @@ let saveEditedProduct = (req, res) => {
 				created_at: new Date()
 			}
 		}, (err, done) => {
-		if (err) { console.log(err); }
-	  req.flash('success', 'Product Information Successfully Updated.');
-	  res.redirect('/admin');
-	});
+			if (err) { console.log(err); }
+		  req.flash('success', 'Product Information Successfully Updated.');
+		  res.redirect('/admin');
+		});
+}
+
+// Stripe Payment Gateway
+let stripePaymentGateway = (req, res) => {
+  let amount = req.body.totalPaymentAmount;
+  stripe.customers.create({
+    email: req.body.stripeEmail,
+    source: req.body.stripeToken
+  })
+  .then(customer =>
+    stripe.charges.create({
+      amount,
+      description: "Sample Charge",
+         currency: "inr",
+         customer: customer.id
+    }))
+  .then(charge => {
+  		res.render("pages/charge", { Pagetitle: 'Sucessful payment' } );
+  	});
 }

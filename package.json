@@ -28,7 +28,9 @@
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
-    "social-login": "^0.2.8"
+    "path": "^0.12.7",
+    "social-login": "^0.2.8",
+    "stripe": "^4.18.0"
   },
   "repository": {
     "type": "git",

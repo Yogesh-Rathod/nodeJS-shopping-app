@@ -22,7 +22,7 @@
 						<td><%= index + 1 %></td>
 						<td><%= cart.title %></td>
 						<td><%= cart.qty %></td>
-						<td><%= cart.price * cart.qty %></td>
+						<td>&#8377; <%= cart.price * cart.qty %></td>
 					</tr>
 				<% }); %>
 				</tbody>
@@ -31,11 +31,26 @@
 						<td></td>
 						<td>Total:</td>
 						<td></td>
-						<td><%= cart.total %></td>
+						<td>&#8377; <%= cart.total %></td>
 					</tr>
 				</tfoot>
 			<% } %>
 		</table>
+
+		<div class="col-xs-3 pull-right">
+			<form action="/charge" method="POST">
+				<input type="hidden" name="totalPaymentAmount" value="<%= cart.total %>">
+				<article><label>Amount to be paid: &#8377; <%= cart.total %></label></article>
+				<script
+					src="https://checkout.stripe.com/checkout.js"
+					class="stripe-button"
+					data-key="<%= keyPublishable %>"
+					data-locale="auto"
+					data-description="Sample Charge"
+					data-amount="<%= cart.total %>"
+				></script>
+			</form>
+		</div>
 
 	</div>
 </div>
