@@ -44,6 +44,6 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^3.4.0",
-    "node-sass": "^4.5.2"
+    "node-sass": "^7.0.0"
   }
 }
