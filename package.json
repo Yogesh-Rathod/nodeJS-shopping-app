@@ -9,7 +9,9 @@
   "scripts": {
     "build-css": "node-sass --include-path scss scss/main.scss public/css/main.css",
     "watch-css": "nodemon -e scss -x \"npm run build-css\"",
-    "start": "concurrently --kill-others \"nodemon index.js\" \"npm run watch-css\""
+    "start": "concurrently --kill-others \"nodemon index.js\" \"npm run watch-css\"",
+    "prepare": "yarn run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -30,7 +32,8 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "social-login": "^0.2.8",
-    "stripe": "^4.18.0"
+    "stripe": "^4.18.0",
+    "@snyk/protect": "latest"
   },
   "repository": {
     "type": "git",
@@ -45,5 +48,6 @@
   "devDependencies": {
     "concurrently": "^3.4.0",
     "node-sass": "^4.5.2"
-  }
+  },
+  "snyk": true
 }
